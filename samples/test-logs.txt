@@ -1,0 +1,14 @@
+# Paste each line into: sudo /var/ossec/bin/wazuh-logtest
+# All values are fictitious / documentation-range.
+
+# 1) Admin configuration change -> expect rule 110101 (level 8)
+<134>device_name="SFW" timestamp="2026-06-03T11:35:00+0100" device_model="SFVH" device_serial_id="X000000000000" log_id="000000000001" log_type="Event" log_component="GUI" log_subtype="Admin" status="Successful" severity="Information" log_version=1 user_name="admin_sa" src_ip="127.0.0.1" message="Log Settings were changed by admin_sa from 127.0.0.1 using GUI"
+
+# 2) SSH auth failure -> expect rule 110106 (level 8)
+<133>device_name="SFW" timestamp="2026-06-03T11:32:45+0100" device_model="SFVH" device_serial_id="X000000000000" log_id="000000000002" log_type="Event" log_component="CLI" log_subtype="Admin" status="Failed" severity="Notice" log_version=1 user_name="bdsm" src_ip="198.51.100.23" message="User bdsm failed to login from 198.51.100.23 using ssh because of wrong credentials"
+
+# 3) SSL VPN login -> expect rule 110103 (level 3)
+<134>device_name="SFW" timestamp="2026-06-03T11:33:53+0100" device_model="SFVH" device_serial_id="X000000000000" log_id="000000000003" log_type="Event" log_component="SSL VPN Authentication" log_subtype="Authentication" log_version=1 status="Successful" severity="Information" user_name="jane.doe" src_ip="203.0.113.50" message="User jane.doe authenticated successfully"
+
+# 4) Branch firewall sending a hostname as device_name -> expect rule 110101 (level 8)
+<134>device_name="branch01.firewall.example.com" timestamp="2026-06-04T10:13:51+0100" device_model="SFVH" device_serial_id="X000000000000" log_id="000000000004" log_type="Event" log_component="GUI" log_subtype="Admin" status="Successful" severity="Notice" log_version=1 user_name="admin_sa" src_ip="127.0.0.1" message="User admin_sa logged in successfully to Web Admin Console."

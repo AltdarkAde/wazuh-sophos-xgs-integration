@@ -1,0 +1,61 @@
+<!-- Add to /var/ossec/etc/decoders/local_decoder.xml -->
+<!-- ========================= -->
+<!-- SOPHOS XGS FIREWALL       -->
+<!-- ========================= -->
+<decoder name="sophos-xgs">
+  <prematch>device_name="</prematch>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>log_id="(\w+)"</regex>
+  <order>id</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>log_type="([^"]+)"</regex>
+  <order>extra_data</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>log_component="([^"]+)"</regex>
+  <order>extra_data</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>log_subtype="([^"]+)"</regex>
+  <order>extra_data</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>severity="([^"]+)"</regex>
+  <order>extra_data</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex type="pcre2">user_name="([^"]+)".*src_ip="(\d+\.\d+\.\d+\.\d+)"</regex>
+  <order>dstuser,srcip</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex type="pcre2">src_ip="(\d+\.\d+\.\d+\.\d+)".*user_name="([^"]+)"</regex>
+  <order>srcip,dstuser</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>dst_ip="(\d+\.\d+\.\d+\.\d+)"</regex>
+  <order>dstip</order>
+</decoder>
+
+<decoder name="sophos-xgs">
+  <parent>sophos-xgs</parent>
+  <regex>message="([^"]+)"</regex>
+  <order>extra_data</order>
+</decoder>

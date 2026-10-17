@@ -1,0 +1,14 @@
+# Secrets - never commit
+*.env
+!*.env.example
+*.pem
+*.key
+secrets/
+# OS / editor
+.DS_Store
+.vscode/
+__pycache__/
+# Medium export working files
+medium-export/
+
+scripts/redact.json

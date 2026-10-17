@@ -1,0 +1,74 @@
+<!-- Add to /var/ossec/etc/rules/local_rules.xml -->
+<group name="sophos_xgs,firewall,">
+
+  <!-- Base rule -->
+  <rule id="110100" level="3">
+    <decoded_as>sophos-xgs</decoded_as>
+    <description>Sophos XGS: Firewall event detected</description>
+    <group>sophos_xgs,firewall</group>
+  </rule>
+
+  <!-- Admin configuration change -->
+  <rule id="110101" level="8">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">log_component="GUI".*log_subtype="Admin".*status="Successful"</regex>
+    <description>Sophos XGS: Admin configuration change by $(dstuser) from $(srcip)</description>
+    <group>sophos_xgs,configuration_changed</group>
+  </rule>
+
+  <!-- Admin action failure -->
+  <rule id="110102" level="10">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">log_component="GUI".*log_subtype="Admin".*status="Failed"</regex>
+    <description>Sophos XGS: Failed admin action by $(dstuser) from $(srcip)</description>
+    <group>sophos_xgs,configuration_changed,authentication_failed</group>
+  </rule>
+
+  <!-- SSL VPN successful authentication -->
+  <rule id="110103" level="3">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">log_component="SSL VPN Authentication".*status="Successful"</regex>
+    <description>Sophos XGS: SSL VPN login by $(dstuser) from $(srcip)</description>
+    <group>sophos_xgs,vpn,authentication_success</group>
+  </rule>
+
+  <!-- VPN/IPSec failure -->
+  <rule id="110104" level="6">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">log_component="IPSec".*status="Failed"</regex>
+    <description>Sophos XGS: VPN/IPSec failure detected</description>
+    <group>sophos_xgs,vpn</group>
+  </rule>
+
+  <!-- VPN/IPSec expired/timeout -->
+  <rule id="110105" level="6">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">log_component="IPSec".*status="Expire"</regex>
+    <description>Sophos XGS: VPN/IPSec tunnel expired or timed out</description>
+    <group>sophos_xgs,vpn</group>
+  </rule>
+
+  <!-- Generic authentication failure -->
+  <rule id="110106" level="8">
+    <if_sid>110100</if_sid>
+    <match>status="Failed"</match>
+    <description>Sophos XGS: Authentication failure for user $(dstuser) from $(srcip)</description>
+    <group>sophos_xgs,authentication_failed</group>
+  </rule>
+
+  <!-- Brute force detection -->
+  <rule id="110107" level="10" frequency="5" timeframe="60">
+    <if_matched_sid>110106</if_matched_sid>
+    <description>Sophos XGS: Brute force attack detected from $(srcip)</description>
+    <group>sophos_xgs,authentication_failed,brute_force</group>
+  </rule>
+
+  <!-- Generic successful authentication - catch-all excluding GUI and SSL VPN -->
+  <rule id="110108" level="3">
+    <if_sid>110100</if_sid>
+    <regex type="pcre2">status="Successful"(?!.*log_component="GUI")(?!.*log_component="SSL VPN")</regex>
+    <description>Sophos XGS: Successful login by $(dstuser) from $(srcip)</description>
+    <group>sophos_xgs,authentication_success</group>
+  </rule>
+
+</group>
